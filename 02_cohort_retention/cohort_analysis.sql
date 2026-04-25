@@ -1,5 +1,5 @@
-USE Northwind;
-GO
+-- USE Northwind;
+-- GO
 
 WITH FirstPurchase AS (
     SELECT

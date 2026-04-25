@@ -1,5 +1,5 @@
-USE Northwind;
-GO
+-- USE Northwind;
+-- GO
 
 -- Business question: Are orders being shipped on time?
 -- Which shippers have the longest delays? Which employees handle the most volume?

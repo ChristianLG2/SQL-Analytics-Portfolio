@@ -1,5 +1,5 @@
-USE Northwind;
-GO
+-- USE Northwind;
+-- GO
 
 -- Business question: How has monthly revenue trended?
 -- What is the month-over-month growth rate and 3-month rolling average?

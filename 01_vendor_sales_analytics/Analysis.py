@@ -395,4 +395,177 @@ plt.savefig("outputs/03_MoM_Growth.png", dpi=150, bbox_inches="tight")
 plt.show()
 
 # %%
-print(sales_trends["MonthlyRevenue"])
+fig, ax = plt.subplots(figsize=(14, 6))
+
+months = sales_trends['SaleMonth']
+three_month_average = sales_trends['Rolling3MonthAvg']
+revenue = sales_trends['MonthlyRevenue']
+median_overall = sales_trends["Rolling3MonthAvg"].median()
+
+
+# Monthly Revenue — thinner, more transparent
+ax.plot(months, revenue,
+        color='#2E74B5',
+        marker='o',
+        markersize=4,
+        linewidth=1.5,
+        alpha=0.6,
+        label='Monthly Revenue',
+        zorder=2)
+
+# Rolling Average — thicker, more prominent
+ax.plot(months, three_month_average,
+        color='#3BDDB8',
+        marker='o',
+        markersize=6,
+        linewidth=2.5,
+        label='3-Month Rolling Average',
+        zorder=3)
+
+# Median line
+ax.axhline(y=median_overall, 
+           color="#00712F", 
+           linestyle="--", 
+           linewidth=1.5, 
+           alpha=0.8, 
+           zorder=1, 
+           label=f'Median ${median_overall:,.0f}')
+
+# Subtle vertical grid — helps trace each point to its month
+ax.grid(axis='x', linestyle=':', linewidth=0.5, alpha=0.5, color='gray')
+ax.grid(axis='y', linestyle=':', linewidth=0.5, alpha=0.3, color='gray')
+
+# Every month on X axis
+ax.xaxis.set_major_formatter(mdates.DateFormatter('%b\n%Y'))
+ax.xaxis.set_major_locator(mdates.MonthLocator(interval=1))
+
+# Y axis currency
+ax.yaxis.set_major_formatter(mticker.FuncFormatter(
+    lambda x, p: f'${x:,.0f}'
+))
+
+# Peak annotation
+peak_idx = sales_trends['MonthlyRevenue'].idxmax()
+peak_row = sales_trends.loc[peak_idx]
+ax.annotate(f"Peak\n${peak_row['MonthlyRevenue']:,.0f}",
+            xy=(peak_row['SaleMonth'], peak_row['MonthlyRevenue']),
+            xytext=(-40, 15),
+            textcoords='offset points',
+            fontsize=8,
+            fontweight='bold',
+            color='#2E74B5',
+            arrowprops=dict(arrowstyle='->', color='#2E74B5', lw=1.2))
+
+# Low annotation
+low_idx = sales_trends['MonthlyRevenue'].idxmin()
+low_row = sales_trends.loc[low_idx]
+ax.annotate(f"Low\n${low_row['MonthlyRevenue']:,.0f}",
+            xy=(low_row['SaleMonth'], low_row['MonthlyRevenue']),
+            xytext=(10, -30),
+            textcoords='offset points',
+            fontsize=8,
+            fontweight='bold',
+            color='#C0392B',
+            arrowprops=dict(arrowstyle='->', color='#C0392B', lw=1.2))
+
+ax.set_xlabel("Month", fontsize=11, labelpad=10)
+ax.set_ylabel("Net Revenue", fontsize=11, labelpad=10)
+ax.set_title("3 Month Average Revenue vs Monthly Revenue Trend — Northwind Database",
+             fontsize=14, fontweight="bold", pad=15)
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+ax.legend(fontsize=9, framealpha=0.7, loc="upper left")
+
+ax.text(months.iloc[-1], median_overall + 1500, 
+        f'Median ${median_overall:,.0f}', 
+        fontsize=8, color='#27AE60', va='bottom')
+ax.fill_between(months, revenue, alpha=0.08, color='#2E74B5')
+
+plt.show()
+
+
+
+
+# %%
+
+sales_trends["SaleMonth"] = pd.to_datetime(sales_trends['SaleMonth'])
+sales_trends =sales_trends.sort_values('SaleMonth')
+
+fig, ax = plt.subplots(figsize=(14, 6))
+
+median_overall = sales_trends["MonthlyRevenue"].median()
+months = sales_trends["SaleMonth"]
+revenue = sales_trends['MonthlyRevenue']
+
+# Line + markers
+ax.plot(months, revenue, 
+        color='#2E74B5', 
+        marker='o', 
+        markersize=6, 
+        linewidth=2.5, 
+        label='Monthly Revenue',
+        zorder=3)
+
+# Median line
+ax.axhline(y=median_overall, 
+           color="#27AE60", 
+           linestyle="--", 
+           linewidth=1.5, 
+           alpha=0.8, 
+           zorder=1, 
+           label=f'Median ${median_overall:,.0f}')
+
+# Subtle vertical grid — helps trace each point to its month
+ax.grid(axis='x', linestyle=':', linewidth=0.5, alpha=0.5, color='gray')
+ax.grid(axis='y', linestyle=':', linewidth=0.5, alpha=0.3, color='gray')
+
+# Every month on X axis
+ax.xaxis.set_major_formatter(mdates.DateFormatter('%b\n%Y'))
+ax.xaxis.set_major_locator(mdates.MonthLocator(interval=1))
+
+# Y axis currency
+ax.yaxis.set_major_formatter(mticker.FuncFormatter(
+    lambda x, p: f'${x:,.0f}'
+))
+
+# Peak annotation
+peak_idx = sales_trends['MonthlyRevenue'].idxmax()
+peak_row = sales_trends.loc[peak_idx]
+ax.annotate(f"Peak\n${peak_row['MonthlyRevenue']:,.0f}",
+            xy=(peak_row['SaleMonth'], peak_row['MonthlyRevenue']),
+            xytext=(-40, 15),
+            textcoords='offset points',
+            fontsize=8,
+            fontweight='bold',
+            color='#2E74B5',
+            arrowprops=dict(arrowstyle='->', color='#2E74B5', lw=1.2))
+
+# Low annotation
+low_idx = sales_trends['MonthlyRevenue'].idxmin()
+low_row = sales_trends.loc[low_idx]
+ax.annotate(f"Low\n${low_row['MonthlyRevenue']:,.0f}",
+            xy=(low_row['SaleMonth'], low_row['MonthlyRevenue']),
+            xytext=(10, -30),
+            textcoords='offset points',
+            fontsize=8,
+            fontweight='bold',
+            color='#C0392B',
+            arrowprops=dict(arrowstyle='->', color='#C0392B', lw=1.2))
+
+ax.set_xlabel("Month", fontsize=11, labelpad=10)
+ax.set_ylabel("Net Revenue", fontsize=11, labelpad=10)
+ax.set_title("Monthly Revenue Trend — Northwind Database",
+             fontsize=14, fontweight="bold", pad=15)
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+ax.legend(fontsize=9, framealpha=0.7, loc="upper left")
+
+ax.text(months.iloc[-1], median_overall + 1500, 
+        f'Median ${median_overall:,.0f}', 
+        fontsize=8, color='#27AE60', va='bottom')
+ax.fill_between(months, revenue, alpha=0.08, color='#2E74B5')
+
+plt.tight_layout()
+plt.savefig("outputs/02_Monthly_Revenue.png", dpi=150, bbox_inches="tight")
+plt.show()
+# %%

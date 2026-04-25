@@ -569,3 +569,33 @@ plt.tight_layout()
 plt.savefig("outputs/02_Monthly_Revenue.png", dpi=150, bbox_inches="tight")
 plt.show()
 # %%
+
+
+
+
+
+
+# Establish Database Connection
+conn = pyodbc.connect(
+    "DRIVER={ODBC Driver 17 for SQL Server};"
+    "SERVER=localhost;"
+    "DATABASE=Northwind;"
+    "Trusted_Connection=yes;"
+)
+
+print("Connection Succesful")
+
+# Import supplier_ranking query from SQL files in dir
+base_dir = os.path.dirname(os.path.abspath(__file__))
+sql_path = os.path.join(base_dir, "03_fulfillment_analysis.sql")
+
+with open(sql_path, "r") as file:
+    fulfillment = file.read()
+
+fulfillment = pd.read_sql(fulfillment, conn)
+conn.close()
+
+print(fulfillment.head(10))
+# %%
+
+

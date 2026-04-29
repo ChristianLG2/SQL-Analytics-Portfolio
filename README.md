@@ -30,7 +30,7 @@ Analyzes supplier revenue concentration, category-level rankings, monthly revenu
 
 ![Month-over-Month Revenue Growth](01_vendor_sales_analytics/outputs/02_MoM_Growth.png)
 
-![Rolling3MonthAverage](01_vendor_sales_analytics\outputs\02_Rolling3MonthAverage.png)
+![Rolling3MonthAverage](01_vendor_sales_analytics/outputs/02_Rolling3MonthAverage.png)
 
 ---
 

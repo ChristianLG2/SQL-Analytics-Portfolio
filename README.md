@@ -54,7 +54,8 @@ performance improvements.
 
 ![Query-Stats](03_query_optimization/outputs/stats/01_Before_Supplier_Ranking_stats.png)
 
-![Query-EP](03_query_optimization/query_plans/01_Before_Supplier_Ranking_QPlan.sqlplan)
+![Query-EP](03_query_optimization/outputs/queryplans/01_Supplier_Ranking_QPlan.png)
+
 ---
 
 ### 04 · Star Schema Design + Power BI

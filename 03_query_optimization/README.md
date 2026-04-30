@@ -272,14 +272,12 @@ Index Hint               → WITH (INDEX()) forces optimizer choice
 ```
 03_query_optimization/
 ├── sql/
-│   ├── 01_supplier_ranking_baseline.sql
-│   ├── 02_supplier_ranking_optimized.sql
-│   ├── 03_sales_trends_baseline.sql
-│   └── 04_index_analysis.sql
-├── execution_plans/
-│   ├── supplier_ranking_before.sqlplan
-│   ├── supplier_ranking_after.sqlplan
-│   └── sales_trends.sqlplan
+│   ├── 01_supplier_ranking_optimized.sql
+│   ├── 02_sales_trends_optimized.sql
+├── query_plans/
+│   ├── 01_before_supplier_ranking_Qplan.sqlplan
+│   ├── 01_after_supplier_ranking_Qplan.sqlplan
+│   └── 02_sales_trends_Qplan.sqlplan
 ├── outputs/
 │   └── optimization_summary.png
 └── README.md

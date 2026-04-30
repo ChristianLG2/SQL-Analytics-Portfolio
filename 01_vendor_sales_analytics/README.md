@@ -22,3 +22,10 @@ sql/          — T-SQL queries
 outputs/      — all charts (.png)
 Analysis.ipynb — full notebook
 Analysis.html  — rendered report
+
+
+
+## Part of the SQL Analytics Portfolio
+
+[![SQL Portfolio](https://img.shields.io/badge/SQL-Analytics%20Portfolio-1F4E79?style=flat)](https://github.com/ChristianLG2/SQL-Analytics-Portfolio)
+[![Christian Lira](https://img.shields.io/badge/Built%20by-Christian%20Lira-2E74B5?style=flat)](https://clirago.com)

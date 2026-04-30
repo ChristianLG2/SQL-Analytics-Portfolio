@@ -65,9 +65,9 @@ Result (49 rows)
 ```
 ![Supplier-Revenue-Ranking-EP](outputs/queryplans/01_Supplier_Ranking_QPlan.png)
 
-**Root cause:** SQL Server performs a Clustered Index Scan on Products as the outer side of a Nested Loop join with Order Details — reading Products once per Order Detail row lookup, producing 4,310 logical reads.
+**Root cause:** SQL Server performs a Clustered Index Scan on Products as the outer side of a Nested Loop join with Order Details, reading Products once per Order Detail row lookup, producing 4,310 logical reads.
 
-### Optimization Attempt — Covering Index
+### Optimization Attempt Covering Index
 
 ```sql
 CREATE INDEX IX_Products_SupplierID_Covering
@@ -98,15 +98,15 @@ Elapsed             76ms           80ms            +4ms  ❌ slower
 
 ### Finding
 
-> The covering index reduced Products reads by 99.95% — but forcing it caused
+> The covering index reduced Products reads by 99.95% but forcing it caused
 > SQL Server to switch from a Hash Match join strategy to a Nested Loop on
 > Order Details, Suppliers, and Categories. The optimizer shifted cost from
 > one table to three others, increasing total logical reads by 302 and elapsed
 > time by 4ms.
 >
 > **The query optimizer was correct to ignore the index.** On a small dataset
-> like Northwind, the original Hash Match plan — reading Products once via a
-> Clustered Index Scan — is more efficient than 77 nested loop iterations
+> like Northwind, the original Hash Match plan reading Products once via a
+> Clustered Index Scan is more efficient than 77 nested loop iterations
 > through Order Details. This demonstrates that index hints should be applied
 > with caution on small tables: the optimizer has visibility into the full
 > execution cost that per-table analysis does not.
@@ -119,7 +119,7 @@ Fixing one bottleneck in isolation can shift cost rather than reduce it. The opt
 
 ---
 
-## Case 2 — Monthly Sales Trends
+## Case 2 Monthly Sales Trends
 
 ### Query Profile
 
@@ -154,7 +154,7 @@ Total                   39       50ms elapsed
         ↓
 [Merge Join] Orders ⋈ Order Details on OrderID
         ↓
-[Sort] — ORDER BY SaleMonth
+[Sort] ORDER BY SaleMonth
         ↓
 [Stream Aggregate] GROUP BY month → SUM(revenue)
         ↓
@@ -170,12 +170,12 @@ Result (23 rows)
 
 **Merge Join instead of Hash Match or Nested Loop:**
 
-SQL Server chose a Merge Join on `OrderID` — the most efficient join typewhen both inputs are pre-sorted on the join key. Orders and Order Detailsare both clustered on `OrderID`, so no additional sort is required for the join.
+SQL Server chose a Merge Join on `OrderID` the most efficient join typewhen both inputs are pre-sorted on the join key. Orders and Order Detailsare both clustered on `OrderID`, so no additional sort is required for the join.
 Total join cost: near zero.
 
 **Ordered Forward scans:**
 
-Both Clustered Index Scans are `ORDERED FORWARD` — SQL Server reads each tableonce in primary key order, feeds the Merge Join directly, and avoids any random I/O. This is why Orders costs only 24 reads and Order Details only 15.
+Both Clustered Index Scans are `ORDERED FORWARD` SQL Server reads each tableonce in primary key order, feeds the Merge Join directly, and avoids any random I/O. This is why Orders costs only 24 reads and Order Details only 15.
 
 **Window Spool in memory:**
 
@@ -232,7 +232,7 @@ INCLUDE (OrderID);
 -- recomputing window functions on every query
 ```
 
-At Northwind scale — unnecessary. Documenting for production awareness.
+At Northwind scale unnecessary. Documenting for production awareness.
 
 ---
 

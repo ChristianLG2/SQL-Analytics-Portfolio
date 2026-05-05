@@ -3115,8 +3115,8 @@ vertical-align: -.125em;
   <li><a href="#section-4-late-order-severity-analysis" id="toc-section-4-late-order-severity-analysis" class="nav-link" data-scroll-target="#section-4-late-order-severity-analysis"><span class="header-section-number">6</span> Section 4: Late Order Severity Analysis</a>
   <ul class="collapse">
   <li><a href="#data-model-3" id="toc-data-model-3" class="nav-link" data-scroll-target="#data-model-3"><span class="header-section-number">6.1</span> Data Model</a></li>
-  <li><a href="#query-design-late-orders-isolation" id="toc-query-design-late-orders-isolation" class="nav-link" data-scroll-target="#query-design-late-orders-isolation"><span class="header-section-number">6.2</span> Query Design — Late Orders Isolation</a></li>
-  <li><a href="#visualizations-findings-1" id="toc-visualizations-findings-1" class="nav-link" data-scroll-target="#visualizations-findings-1"><span class="header-section-number">6.3</span> Visualizations &amp; Findings</a></li>
+  <li><a href="#query-design-late-orders-isolation" id="toc-query-design-late-orders-isolation" class="nav-link" data-scroll-target="#query-design-late-orders-isolation"><span class="header-section-number">6.2</span> Query Design Late Orders Isolation</a></li>
+  <li><a href="#visualizations-1" id="toc-visualizations-1" class="nav-link" data-scroll-target="#visualizations-1"><span class="header-section-number">6.3</span> Visualizations</a></li>
   </ul></li>
   <li><a href="#conclusions-recommendations" id="toc-conclusions-recommendations" class="nav-link" data-scroll-target="#conclusions-recommendations"><span class="header-section-number">7</span> Conclusions &amp; Recommendations</a>
   <ul class="collapse">
@@ -4234,7 +4234,7 @@ vertical-align: -.125em;
 </table>
 </section>
 <section id="query-design-late-orders-isolation" class="level3" data-number="6.2">
-<h3 data-number="6.2" class="anchored" data-anchor-id="query-design-late-orders-isolation"><span class="header-section-number">6.2</span> Query Design — Late Orders Isolation</h3>
+<h3 data-number="6.2" class="anchored" data-anchor-id="query-design-late-orders-isolation"><span class="header-section-number">6.2</span> Query Design Late Orders Isolation</h3>
 <p>A single CTE (<code>ShippingDetails</code>) filters to late orders only using <code>WHERE o.ShippedDate &gt; o.RequiredDate</code>, then computes <code>DATEDIFF(DAY, o.RequiredDate, o.ShippedDate)</code> as <code>DaysLate</code> per order. The outer query returns the full detail sorted by worst delay, allowing both per-order inspection and downstream aggregation by shipper.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> ShippingDetails <span class="kw">AS</span> (</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> </span>
@@ -4255,44 +4255,8 @@ vertical-align: -.125em;
 <span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> DaysLate <span class="kw">DESC</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The <code>WHERE</code> clause is the critical filter on-time orders never enter the CTE, so all downstream aggregation reflects delay severity only. <code>ORDER BY DaysLate DESC</code> surfaces the worst offenders first for immediate visibility.</p>
 </section>
-<section id="visualizations-findings-1" class="level3" data-number="6.3">
-<h3 data-number="6.3" class="anchored" data-anchor-id="visualizations-findings-1"><span class="header-section-number">6.3</span> Visualizations &amp; Findings</h3>
-<section id="chart-10-average-days-late-when-orders-miss-deadline" class="level4" data-number="6.3.1">
-<h4 data-number="6.3.1" class="anchored" data-anchor-id="chart-10-average-days-late-when-orders-miss-deadline"><span class="header-section-number">6.3.1</span> Chart 10 — Average Days Late When Orders Miss Deadline</h4>
-<blockquote class="blockquote">
-<p><strong>Average Days Late When Orders Miss Deadline Northwind Database</strong> A horizontal bar chart showing the average number of days past the required delivery date for each shipper, computed exclusively among late orders. This isolates delay severity from frequency, revealing how badly each carrier misses deadlines when it does.</p>
-</blockquote>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Metric</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Worst average delay</td>
-<td>Speedy Express 8.1 days late on average</td>
-</tr>
-<tr class="even">
-<td>Mid severity</td>
-<td>United Package 5.6 avg days late across 27 late orders</td>
-</tr>
-<tr class="odd">
-<td>Most consistent</td>
-<td>Federal Shipping 5.6 avg days late across 15 late orders</td>
-</tr>
-<tr class="even">
-<td>Severity gap</td>
-<td>Speedy Express is 45% worse than both peers when late</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Key Insight:</strong> Two distinct failure patterns emerge across the three carriers. United Package fails <strong>frequently but recovers relatively quickly</strong> it has the most late orders (27) but an average delay of only 5.6 days. Speedy Express is the inverse: it fails <strong>rarely but severely</strong> when it misses a deadline, it averages 8.1 days late, 45% worse than its peers. Federal Shipping is the most reliable carrier on both dimensions, matching United Package’s delay severity with nearly half the late order count.</p>
+<section id="visualizations-1" class="level3" data-number="6.3">
+<h3 data-number="6.3" class="anchored" data-anchor-id="visualizations-1"><span class="header-section-number">6.3</span> Visualizations</h3>
 <div id="5baa90c5" class="cell" data-vscode="{&quot;languageId&quot;:&quot;sql&quot;}">
 <details class="code-fold">
 <summary>Code</summary>
@@ -4369,7 +4333,6 @@ vertical-align: -.125em;
 </div>
 </div>
 <p>While Chart “On Time VS Late Orders by Shippers” identified United Package as having the lowest on-time rate with 27 late orders, the most of any shipper Chart “Average Days Late When Orders Miss Deadline” reveals a more nuanced picture of delay severity. Speedy Express, despite fewer late orders (15), averages 8.1 days past the required date when delays do occur 45% more severe than United Package and Federal Shipping, both averaging 5.6 days late. Federal Shipping performs most consistently across all three metrics: fewest late orders (15), tied for lowest average delay (5.6 days), and the best on-time rate from Chart 8. The data suggests two distinct failure modes, United Package fails frequently but recovers quickly, while Speedy Express fails rarely but severely. For time-critical shipments, Federal Shipping is the lowest-risk carrier across all fulfillment dimensions.</p>
-</section>
 </section>
 </section>
 <section id="conclusions-recommendations" class="level2" data-number="7">

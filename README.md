@@ -7,7 +7,6 @@ dimensional modeling, dbt transformations, Snowflake migration, and PySpark each
 
 ## Tech Stack
 
-## Tech Stack
 
 [![T-SQL](https://img.shields.io/badge/T--SQL-CC2927?style=flat&logo=microsoftsqlserver&logoColor=white)](https://www.microsoft.com/en-us/sql-server)
 [![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)](https://python.org)
